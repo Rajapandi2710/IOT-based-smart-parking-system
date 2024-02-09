@@ -1,0 +1,35 @@
+#include 
+#include 
+#define BLYNK_PRINT Serial
+
+#define VIRTUAL_PIN 1  // Replace with your virtual pin number from the Blynk app
+#define ledPinPIR D1  // Replace with your GPIO pin connected to the PIR sensor
+#define ledPinIR D2   // Replace with your GPIO pin connected to the IR sensor
+
+char auth[] = "YourAuthToken";  // Replace with your authorization token from the Blynk app
+char ssid[] = "wifiName";   // Replace with your Wi-Fi SSID
+char pass[] = "passWord"; // Replace with your Wi-Fi password
+
+BlynkTimer timer;
+
+void setup()
+{
+  Blynk.begin(auth, ssid, pass);
+
+  pinMode(ledPinPIR, OUTPUT);
+  pinMode(ledPinIR, OUTPUT);
+}
+
+void loop()
+{
+  Blynk.run();
+
+  int pirValue = digitalRead(ledPinPIR);
+  int irValue = digitalRead(ledPinIR);
+
+  if (pirValue == HIGH || irValue == HIGH) {
+    Blynk.virtualWrite(VIRTUAL_PIN, 1);  // Set to occupied
+  } else {
+    Blynk.virtualWrite(VIRTUAL_PIN, 0);  // Set to unoccupied
+  }
+}
